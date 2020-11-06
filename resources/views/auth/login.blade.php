@@ -61,6 +61,10 @@
                                         {{ __('Forgot Your Password?') }}
                                     </a>
                                 @endif
+
+                                <a href='/login/facebook' type="submit" class="btn btn-primary">
+                                    {{ __('Login by Facebook') }}
+                                </a>
                             </div>
                         </div>
                     </form>

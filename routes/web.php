@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\{ReplyController, ThreadController};
+use App\Http\Controllers\{ReplyController, SocialAuthController, ThreadController};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -16,6 +16,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Auth::routes();
+
+Route::get('/login/{provider}', [SocialAuthController::class, 'facebookRedirect']);
+Route::get('/login/{provider}/callback', [SocialAuthController::class, 'facebookCallback']);
 
 Route::get('/', function () {
     return view('threads.index');
