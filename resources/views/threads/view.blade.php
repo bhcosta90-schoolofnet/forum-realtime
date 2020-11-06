@@ -19,7 +19,7 @@
             your-answer="{{ __('Your answer') }}"
             send="{{ __('Send') }}"
             thread-id="{{ $results->id  }}"
-            is-closed="{{ $results->closed  }}"
+            is-closed="{{ $results->closed_at  }}"
             fixed="{{ __("Fixed Reply") }}"
         >
             @include('layouts.default.preloader')

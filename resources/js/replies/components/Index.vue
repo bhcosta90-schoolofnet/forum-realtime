@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <div class="card grey lighten-4">
+        <div class="card grey lighten-4" v-if=!isClosed>
             <div class="card-content">
                 <span class="card-title">{{ reply }}</span>
                 <form @submit.prevent="save()">
@@ -30,7 +30,6 @@
             "reply",
             "your-answer",
             "send",
-            "thread-id",
             "is-closed",
             'thread-id',
             'fixed'

@@ -9,7 +9,7 @@
                             <th style="width:1px">#</th>
                             <th>{{ thread }}</th>
                             <th>{{ reply }}</th>
-                            <th style="width:165px"></th>
+                            <th :style="{'width:310px' : logged.role === 'admin', 'width:1px' : logged.role !== 'admin'}"></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -20,6 +20,8 @@
                             <td class='right-align'>
                                 <a class='btn' :href="'/threads/' + thread.id">{{ open }}</a>
                                 <a class='btn orange' v-show="logged.role === 'admin'" href="#" @click.prevent="actionFixed(thread.id)">{{ fixed }}</a>
+                                <a class='btn red' v-show="logged.role === 'admin' && !thread.closed_at" href="#" @click.prevent="actionClosed(thread.id)">{{ closed }}</a>
+                                <a class='btn red' v-show="logged.role === 'admin' && thread.closed_at" href="#" @click.prevent="actionReopen(thread.id)">{{ reopen }}</a>
                             </td>
                         </tr>
                     </tbody>
@@ -55,7 +57,9 @@
             'thread_title',
             'thread_body',
             'send',
-            'fixed'
+            'fixed',
+            'closed',
+            'reopen'
         ],
         data() {
             return {
@@ -92,6 +96,34 @@
             actionFixed(id) {
                 window.axios.post(`/api/threads/${id}/fixed`).then(response => {
                     this.getThreads();
+                });
+            },
+            actionClosed(id) {
+                window.swal.fire({
+                    title: "Atenção",
+                    text: "Você tem certeza que deseja finalizar esse tópico.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sim!',
+                    cancelButtonText: 'Não!'
+                }).then(result => {
+                    window.axios.delete(`/api/threads/${id}/closed`).then(response => {
+                        this.getThreads();
+                    });
+                });
+            },
+            actionReopen(id) {
+                window.swal.fire({
+                    title: "Atenção",
+                    text: "Você tem certeza que deseja reabrir esse tópico.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sim!',
+                    cancelButtonText: 'Não!'
+                }).then(result => {
+                    window.axios.post(`/api/threads/${id}/reopen`).then(response => {
+                        this.getThreads();
+                    });
                 });
             }
         },

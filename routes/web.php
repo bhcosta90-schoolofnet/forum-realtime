@@ -45,6 +45,8 @@ Route::middleware(['auth'])
         Route::post('/threads', [ThreadController::class, 'store']);
         Route::put('/threads/{thread}', [ThreadController::class, 'update']);
         Route::post('/threads/{thread}/fixed', [ThreadController::class, 'fixed']);
+        Route::delete('/threads/{thread}/closed', [ThreadController::class, 'closed']);
+        Route::post('/threads/{thread}/reopen', [ThreadController::class, 'reopen']);
         Route::post('/replies/{thread}', [ReplyController::class, 'store']);
         Route::post('/replies/{reply}/highlighted', [ReplyController::class, 'highlighted']);
     });

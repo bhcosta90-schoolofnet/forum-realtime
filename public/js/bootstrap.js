@@ -55795,6 +55795,7 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   forceTLS: true
 });
 
+window.swal = sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a;
 
 var successCallback = function successCallback(response) {
   return response;
@@ -55836,14 +55837,7 @@ var errorCallback = function errorCallback(error) {
       sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire({
         title: "Erro",
         text: "Algo deu errado e não pude resolver.",
-        icon: 'error',
-        showCancelButton: true,
-        confirmButtonText: 'OK!',
-        cancelButtonText: 'Não!'
-      }).then(function (result) {
-        if (result.value) {
-          window.location = '/login';
-        }
+        icon: 'error'
       });
   }
 

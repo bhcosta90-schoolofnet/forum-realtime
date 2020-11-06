@@ -55,8 +55,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['title', 'thread', 'reply', 'open', 'new_thread', 'thread_title', 'thread_body', 'send', 'fixed'],
+  props: ['title', 'thread', 'reply', 'open', 'new_thread', 'thread_title', 'thread_body', 'send', 'fixed', 'closed', 'reopen'],
   data: function data() {
     return {
       threads_response: [],
@@ -101,6 +103,38 @@ __webpack_require__.r(__webpack_exports__);
 
       window.axios.post("/api/threads/".concat(id, "/fixed")).then(function (response) {
         _this4.getThreads();
+      });
+    },
+    actionClosed: function actionClosed(id) {
+      var _this5 = this;
+
+      window.swal.fire({
+        title: "Atenção",
+        text: "Você tem certeza que deseja finalizar esse tópico.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim!',
+        cancelButtonText: 'Não!'
+      }).then(function (result) {
+        window.axios["delete"]("/api/threads/".concat(id, "/closed")).then(function (response) {
+          _this5.getThreads();
+        });
+      });
+    },
+    actionReopen: function actionReopen(id) {
+      var _this6 = this;
+
+      window.swal.fire({
+        title: "Atenção",
+        text: "Você tem certeza que deseja reabrir esse tópico.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sim!',
+        cancelButtonText: 'Não!'
+      }).then(function (result) {
+        window.axios.post("/api/threads/".concat(id, "/reopen")).then(function (response) {
+          _this6.getThreads();
+        });
       });
     }
   }
@@ -605,7 +639,12 @@ var render = function() {
               _vm._v(" "),
               _c("th", [_vm._v(_vm._s(_vm.reply))]),
               _vm._v(" "),
-              _c("th", { staticStyle: { width: "165px" } })
+              _c("th", {
+                style: {
+                  "width:310px": _vm.logged.role === "admin",
+                  "width:1px": _vm.logged.role !== "admin"
+                }
+              })
             ])
           ]),
           _vm._v(" "),
@@ -653,6 +692,56 @@ var render = function() {
                         }
                       },
                       [_vm._v(_vm._s(_vm.fixed))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value:
+                              _vm.logged.role === "admin" && !thread.closed_at,
+                            expression:
+                              "logged.role === 'admin' && !thread.closed_at"
+                          }
+                        ],
+                        staticClass: "btn red",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.actionClosed(thread.id)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.closed))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value:
+                              _vm.logged.role === "admin" && thread.closed_at,
+                            expression:
+                              "logged.role === 'admin' && thread.closed_at"
+                          }
+                        ],
+                        staticClass: "btn red",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.actionReopen(thread.id)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.reopen))]
                     )
                   ])
                 ]

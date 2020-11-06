@@ -57,6 +57,7 @@ class ThreadTest extends TestCase
         $thread->user_id = (int) $thread->user_id;
         unset($thread->reply_count);
         unset($thread->fixed);
+        unset($thread->closed_at);
 
         $response->assertStatus(201)
             ->assertJsonFragment(['created' => 'success'])
@@ -82,6 +83,7 @@ class ThreadTest extends TestCase
         $compare = Thread::find(1);
         unset($compare->fixed);
         unset($compare->reply_count);
+        unset($compare->closed_at);
 
         $response->assertStatus(302);
         $this->assertEquals($compare->toArray(), $thread->toArray());
@@ -119,5 +121,43 @@ class ThreadTest extends TestCase
             'id' => 2,
             'fixed' => true,
         ]);
+    }
+
+    public function testThreadClosed()
+    {
+        $obj = Thread::factory(4)->create();
+
+        $user = User::first();
+        $user->role = 'admin';
+        $user->save();
+
+        $response = $this
+            ->actingAs($user)
+            ->json('DELETE', '/api/threads/1/closed', []);
+
+        $response->assertStatus(204);
+
+        $thread = Thread::where('id', 1)->first();
+
+        $this->assertNotNull($thread->closed_at);
+    }
+
+    public function testThreadReopen()
+    {
+        $obj = Thread::factory(4)->create();
+
+        $user = User::first();
+        $user->role = 'admin';
+        $user->save();
+
+        $response = $this
+            ->actingAs($user)
+            ->json('POST', '/api/threads/1/reopen', []);
+
+        $response->assertStatus(200);
+
+        $thread = Thread::where('id', 1)->first();
+
+        $this->assertNull($thread->closed_at);
     }
 }

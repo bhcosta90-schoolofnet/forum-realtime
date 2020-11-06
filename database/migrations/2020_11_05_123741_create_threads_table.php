@@ -21,6 +21,7 @@ class CreateThreadsTable extends Migration
             $table->boolean('fixed')->default(false);
             $table->integer('reply_count')->default(0)->unsigned();
             $table->timestamps();
+            $table->timestamp('closed_at')->nullable();
         });
     }
 

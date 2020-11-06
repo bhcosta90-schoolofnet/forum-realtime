@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Events\NewThreadEvent;
 use App\Http\Requests\ThreadRequest;
 use App\Models\Thread;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -80,5 +81,26 @@ class ThreadController extends Controller
         $thread->save();
 
         return response()->json(['updated' => 'success']);
+    }
+
+    public function closed(Thread $thread)
+    {
+        $this->authorize('closed', $thread);
+        $thread->closed_at = Carbon::now();
+        $thread->save();
+
+        return response('', Response::HTTP_NO_CONTENT);
+    }
+
+    public function reopen(Thread $thread)
+    {
+        $this->authorize('reopen', $thread);
+
+        $thread->closed_at = null;
+        $thread->save();
+
+        return response()->json([
+            'updated' => 'success',
+        ]);
     }
 }

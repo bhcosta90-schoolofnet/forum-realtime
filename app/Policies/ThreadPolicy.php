@@ -18,4 +18,12 @@ class ThreadPolicy
     public function fixed(User $user, Thread $thread, string $role = "admin"){
         return (bool) $user->role == $role;
     }
+
+    public function closed(User $user, Thread $thread, string $role = "admin"){
+        return (bool) $user->role == $role;
+    }
+
+    public function reopen(User $user, Thread $thread, string $role = "admin"){
+        return (bool) $user->role == $role;
+    }
 }

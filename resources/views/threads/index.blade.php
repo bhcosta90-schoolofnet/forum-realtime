@@ -9,10 +9,12 @@
             reply="{{ __('Reply') }}"
             open="{{ __('Open') }}"
             new_thread="{{ __('New thread') }}"
-            thread_title={{ __('Title') }}
-            thread_body={{ __('Body') }}
-            send={{ __('Send') }},
-            fixed={{ __('Fixed') }}
+            thread_title="{{ __('Title') }}"
+            thread_body="{{ __('Body') }}"
+            send="{{ __('Send') }},"
+            fixed="{{ __('Fixed') }}"
+            closed="{{ __('Closed Thread') }}"
+            reopen="{{ __('Reopen Thread') }}"
         >
             @include('layouts.default.preloader')
         </threads-component>

@@ -35,7 +35,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["replied", "reply", "your-answer", "send", "thread-id", "is-closed", 'thread-id', 'fixed'],
+  props: ["replied", "reply", "your-answer", "send", "is-closed", 'thread-id', 'fixed'],
   mounted: function mounted() {
     var _this = this;
 
@@ -612,62 +612,67 @@ var render = function() {
         )
       }),
       _vm._v(" "),
-      _c("div", { staticClass: "card grey lighten-4" }, [
-        _c("div", { staticClass: "card-content" }, [
-          _c("span", { staticClass: "card-title" }, [
-            _vm._v(_vm._s(_vm.reply))
-          ]),
-          _vm._v(" "),
-          _c(
-            "form",
-            {
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  return _vm.save()
-                }
-              }
-            },
-            [
-              _c("div", { staticClass: "input-field" }, [
-                _c("textarea", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.form.reply_body,
-                      expression: "form.reply_body"
-                    }
-                  ],
-                  staticClass: "materialize-textarea",
-                  attrs: {
-                    placeholder: _vm.yourAnswer,
-                    name: "",
-                    id: "",
-                    cols: "30",
-                    rows: "10"
-                  },
-                  domProps: { value: _vm.form.reply_body },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
-                      }
-                      _vm.$set(_vm.form, "reply_body", $event.target.value)
-                    }
-                  }
-                })
+      !_vm.isClosed
+        ? _c("div", { staticClass: "card grey lighten-4" }, [
+            _c("div", { staticClass: "card-content" }, [
+              _c("span", { staticClass: "card-title" }, [
+                _vm._v(_vm._s(_vm.reply))
               ]),
               _vm._v(" "),
               _c(
-                "button",
-                { staticClass: "btn red accent-2", attrs: { type: "submit" } },
-                [_vm._v(_vm._s(_vm.send))]
+                "form",
+                {
+                  on: {
+                    submit: function($event) {
+                      $event.preventDefault()
+                      return _vm.save()
+                    }
+                  }
+                },
+                [
+                  _c("div", { staticClass: "input-field" }, [
+                    _c("textarea", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.form.reply_body,
+                          expression: "form.reply_body"
+                        }
+                      ],
+                      staticClass: "materialize-textarea",
+                      attrs: {
+                        placeholder: _vm.yourAnswer,
+                        name: "",
+                        id: "",
+                        cols: "30",
+                        rows: "10"
+                      },
+                      domProps: { value: _vm.form.reply_body },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.form, "reply_body", $event.target.value)
+                        }
+                      }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn red accent-2",
+                      attrs: { type: "submit" }
+                    },
+                    [_vm._v(_vm._s(_vm.send))]
+                  )
+                ]
               )
-            ]
-          )
-        ])
-      ])
+            ])
+          ])
+        : _vm._e()
     ],
     2
   )

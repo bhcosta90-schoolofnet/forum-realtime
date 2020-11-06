@@ -45,6 +45,8 @@ window.Echo = new Echo({
 
 import swal from 'sweetalert2'
 
+window.swal = swal;
+
 const successCallback = (response) => {
     return response;
 }
@@ -84,13 +86,6 @@ const errorCallback = (error) => {
                 title: "Erro",
                 text: "Algo deu errado e não pude resolver.",
                 icon: 'error',
-                showCancelButton: true,
-                confirmButtonText: 'OK!',
-                cancelButtonText: 'Não!'
-            }).then(result => {
-                if(result.value) {
-                    window.location = '/login';
-                }
             });
     }
 
