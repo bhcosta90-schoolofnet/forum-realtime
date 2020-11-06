@@ -35,10 +35,54 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['title', 'thread', 'reply', 'open'],
+  props: ['title', 'thread', 'reply', 'open', 'new_thread', 'thread_title', 'thread_body', 'send'],
+  data: function data() {
+    return {
+      threads_response: [],
+      form: {
+        title: "",
+        body: ""
+      }
+    };
+  },
   mounted: function mounted() {
-    console.log('Component mounted.');
+    this.getThreads();
+  },
+  methods: {
+    getThreads: function getThreads() {
+      var _this = this;
+
+      window.axios.get('/api/threads').then(function (response) {
+        _this.threads_response = response.data;
+      });
+    },
+    save: function save() {
+      var _this2 = this;
+
+      window.axios.post('/api/threads', this.form).then(function (response) {
+        _this2.getThreads();
+
+        _this2.form = {};
+      });
+    }
   }
 });
 
@@ -527,38 +571,126 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "card" }, [
-    _c("div", { staticClass: "card-content" }, [
-      _c("div", { staticClass: "card-title" }, [_vm._v(_vm._s(_vm.title))]),
-      _vm._v(" "),
-      _c("table", [
-        _c("thead", [
-          _c("tr", [
-            _c("th", [_vm._v("#")]),
-            _vm._v(" "),
-            _c("th", [_vm._v(_vm._s(_vm.thread))]),
-            _vm._v(" "),
-            _c("th", [_vm._v(_vm._s(_vm.reply))]),
-            _vm._v(" "),
-            _c("th")
-          ])
+  return _c("div", [
+    _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-content" }, [
+        _c("div", { staticClass: "card-title" }, [_vm._v(_vm._s(_vm.title))]),
+        _vm._v(" "),
+        _c("table", [
+          _c("thead", [
+            _c("tr", [
+              _c("th", [_vm._v("#")]),
+              _vm._v(" "),
+              _c("th", [_vm._v(_vm._s(_vm.thread))]),
+              _vm._v(" "),
+              _c("th", [_vm._v(_vm._s(_vm.reply))]),
+              _vm._v(" "),
+              _c("th")
+            ])
+          ]),
+          _vm._v(" "),
+          _c(
+            "tbody",
+            _vm._l(_vm.threads_response.data, function(thread, i) {
+              return _c("tr", { key: i }, [
+                _c("td", [_vm._v(_vm._s(thread.id))]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(thread.title))]),
+                _vm._v(" "),
+                _c("td", [_vm._v("0")]),
+                _vm._v(" "),
+                _c("td", [
+                  _c("a", { attrs: { href: "/threads/" + thread.id } }, [
+                    _vm._v(_vm._s(_vm.open))
+                  ])
+                ])
+              ])
+            }),
+            0
+          )
+        ])
+      ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-content" }, [
+        _c("div", { staticClass: "card-title" }, [
+          _vm._v(_vm._s(_vm.new_thread))
         ]),
         _vm._v(" "),
-        _c("tbody", [
-          _c("tr", [
-            _c("td", [_vm._v("1")]),
+        _c(
+          "form",
+          {
+            on: {
+              submit: function($event) {
+                $event.preventDefault()
+                return _vm.save()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "input-field" }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.title,
+                    expression: "form.title"
+                  }
+                ],
+                attrs: {
+                  type: "text",
+                  required: "",
+                  placeholder: _vm.thread_title
+                },
+                domProps: { value: _vm.form.title },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.form, "title", $event.target.value)
+                  }
+                }
+              })
+            ]),
             _vm._v(" "),
-            _c("td", [_vm._v("ooi tudo bem")]),
+            _c("div", { staticClass: "input-field" }, [
+              _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.body,
+                    expression: "form.body"
+                  }
+                ],
+                staticClass: "materialize-textarea",
+                attrs: {
+                  type: "text",
+                  required: "",
+                  placeholder: _vm.thread_body
+                },
+                domProps: { value: _vm.form.body },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.form, "body", $event.target.value)
+                  }
+                }
+              })
+            ]),
             _vm._v(" "),
-            _c("td", [_vm._v("4")]),
-            _vm._v(" "),
-            _c("td", [
-              _c("a", { attrs: { href: "/threads/1" } }, [
-                _vm._v(_vm._s(_vm.open))
-              ])
-            ])
-          ])
-        ])
+            _c(
+              "button",
+              { staticClass: "btn red aceent-2", attrs: { type: "submit" } },
+              [_vm._v(_vm._s(_vm.send))]
+            )
+          ]
+        )
       ])
     ])
   ])

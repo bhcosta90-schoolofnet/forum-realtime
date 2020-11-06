@@ -5,7 +5,14 @@
         <h3>{{ $results->title }}</h3>
         <div class="card grey lighten-4">
             <div class="card-content">{{ $results->body }}</div>
+            <div class="card-action">
+                @can('update', $results)
+                <a href="/threads/{{$results->id}}/edit">{{ __('Edit') }}</a>
+                @endif
+                <a href="/">{{ __('Back') }}</a>
+            </div>
         </div>
+
         <reply-component
             replied="{{ __('replied') }}"
             reply="{{ __('Reply') }}"

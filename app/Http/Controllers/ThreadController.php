@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ThreadRequest;
 use App\Models\Thread;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class ThreadController extends Controller
 {
@@ -14,71 +16,65 @@ class ThreadController extends Controller
      */
     public function index()
     {
-        //
-    }
+        $threads = Thread::orderBy('updated_at', 'desc')
+            ->paginate();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response()->json($threads);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  ThreadRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ThreadRequest $request)
     {
-        //
-    }
+        $obj = new Thread;
+        $obj->title = $request->input('title');
+        $obj->body = $request->input('body');
+        $obj->user_id = (int) auth()->user()->id;
+        $obj->save();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Thread  $thread
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Thread $thread)
-    {
-        //
+        return response()->json([
+            'created' => 'success',
+            'data' => $obj,
+        ], Response::HTTP_CREATED);
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Thread  $thread
-     * @return \Illuminate\Http\Response
-     */
+    
     public function edit(Thread $thread)
     {
-        //
+        $this->authorize('update', $thread);
+        
+        return view('threads.edit', compact('thread'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Thread  $thread
+     * @param  ThreadRequest  $request
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Thread $thread)
+    public function update(ThreadRequest $request, Thread $thread)
     {
-        //
+        $this->authorize('update', $thread);
+
+        $thread->title = $request->input('title');
+        $thread->body = $request->input('body');
+        $thread->user_id = (int) auth()->user()->id;
+        $thread->update();
+
+        return redirect('/threads/' . $thread->id);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Thread  $thread
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Thread $thread)
+    public function destroy($id)
     {
         //
     }

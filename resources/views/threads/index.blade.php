@@ -8,6 +8,10 @@
             thread="{{ __('Threads') }}"
             reply="{{ __('Reply') }}"
             open="{{ __('Open') }}"
+            new_thread="{{ __('New thread') }}"
+            thread_title={{ __('Title') }}
+            thread_body={{ __('Body') }}
+            send={{ __('Send') }}
         >
             @include('layouts.default.preloader')
         </threads-component>

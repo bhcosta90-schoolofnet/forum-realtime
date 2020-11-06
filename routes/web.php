@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\ThreadController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Auth::routes();
 
 Route::get('/', function () {
     return view('threads.index');
@@ -26,3 +30,13 @@ Route::get('/locale/{locale}', function($locale){
     session(['locale' => $locale]);
     return back();
 });
+
+Route::get('/threads/{thread}/edit', [ThreadController::class, 'edit'])->middleware(['auth']);
+
+Route::middleware(['auth'])
+    ->prefix('api')
+    ->group(function(){
+        Route::get('/threads', [ThreadController::class, 'index']);
+        Route::post('/threads', [ThreadController::class, 'store']);
+        Route::put('/threads/{thread}', [ThreadController::class, 'update']);
+    });
