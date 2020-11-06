@@ -34,6 +34,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["replied", "reply", "your-answer", "send", "is-closed", 'thread-id', 'fixed'],
   mounted: function mounted() {
@@ -577,37 +585,39 @@ var render = function() {
           "div",
           {
             key: i,
-            staticClass: "card",
+            staticClass: "card horizontal",
             class: { "lime lighen-4": reply.highlighted }
           },
           [
-            _c("div", { staticClass: "card-content" }, [
-              _c("span", { staticClass: "card-title" }, [
-                _vm._v(_vm._s(reply.user.name) + " " + _vm._s(_vm.replied))
-              ])
+            _c("div", { staticClass: "card-images" }, [
+              _c("img", { attrs: { src: reply.user.photo_url, alt: "" } })
             ]),
             _vm._v(" "),
-            _c("blockquote", [
-              _vm._v("\n            " + _vm._s(reply.body) + "\n        ")
-            ]),
-            _vm._v(" "),
-            _vm.logged.role === "admin" && reply.highlighted == false
-              ? _c("div", { staticClass: "card-action" }, [
-                  _c(
-                    "a",
-                    {
-                      attrs: { href: "#" },
-                      on: {
-                        click: function($event) {
-                          $event.preventDefault()
-                          return _vm.actionHighlighted(reply.id)
-                        }
-                      }
-                    },
-                    [_vm._v(_vm._s(_vm.fixed))]
+            _c("div", { staticClass: "card-stacked" }, [
+              _c("div", { staticClass: "card-content" }, [
+                _c("span", { staticClass: "card-title" }, [
+                  _vm._v(_vm._s(reply.user.name) + " " + _vm._s(_vm.replied))
+                ]),
+                _vm._v(" "),
+                _c("blockquote", [
+                  _vm._v(
+                    "\n                    " +
+                      _vm._s(reply.body) +
+                      "\n                "
                   )
                 ])
-              : _vm._e()
+              ]),
+              _vm._v(" "),
+              _vm.logged.role === "admin"
+                ? _c("div", { staticClass: "card-action" }, [
+                    _c(
+                      "a",
+                      { attrs: { href: "/reply/highligth/" + reply.id } },
+                      [_vm._v("em destaque")]
+                    )
+                  ])
+                : _vm._e()
+            ])
           ]
         )
       }),

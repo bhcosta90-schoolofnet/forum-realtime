@@ -11,6 +11,12 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
+    const PHOTO_ALLOWED = [
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+    ];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -40,4 +46,15 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    protected $appends = [
+        'photo_url',
+    ];
+
+    protected function getPhotoUrlAttribute()
+    {
+        if($this->photo){
+            return asset($this->photo);
+        }
+    }
 }

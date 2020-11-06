@@ -1,13 +1,21 @@
 <template>
     <div>
-        <div class="card" v-for="(reply, i) in replies.data" :class="{'lime lighen-4' : reply.highlighted}" :key=i>
-            <div class="card-content"><span class="card-title">{{ reply.user.name }} {{replied}}</span></div>
-            <blockquote>
-                {{ reply.body }}
-            </blockquote>
+        <div class="card horizontal" v-for="(reply, i) in replies.data" :class="{'lime lighen-4' : reply.highlighted}" :key=i>
+            <div class="card-images">
+                <img :src="reply.user.photo_url" alt="">
+            </div>
 
-            <div class="card-action" v-if="logged.role === 'admin' && reply.highlighted == false">
-                <a href="#" v-on:click.prevent="actionHighlighted(reply.id)">{{ fixed }}</a>
+            <div class="card-stacked">
+                <div class="card-content">
+                    <span class="card-title">{{reply.user.name}} {{ replied }}</span>
+
+                    <blockquote>
+                        {{ reply.body }}
+                    </blockquote>
+                </div>
+                <div class="card-action" v-if="logged.role === 'admin'">
+                    <a :href="'/reply/highligth/' + reply.id">em destaque</a>
+                </div>
             </div>
         </div>
 
