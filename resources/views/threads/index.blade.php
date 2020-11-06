@@ -11,7 +11,8 @@
             new_thread="{{ __('New thread') }}"
             thread_title={{ __('Title') }}
             thread_body={{ __('Body') }}
-            send={{ __('Send') }}
+            send={{ __('Send') }},
+            fixed={{ __('Fixed') }}
         >
             @include('layouts.default.preloader')
         </threads-component>

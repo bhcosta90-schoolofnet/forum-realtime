@@ -41,13 +41,52 @@ class ReplyTest extends TestCase
             ->json('POST', '/api/replies/1', [
                 'reply_body' => 'Oi tudo bem com voce, hahahaheuhudahw'
             ]);
-
+        
+        $reply = Reply::first();
+        $reply->user_id = (int) $reply->user_id;
+        $reply->thread_id = (int) $reply->thread_id;
+        unset($reply->highlighted);
+        
         $response->assertStatus(201)
             ->assertJsonFragment([
                 'created' => "success"
             ])
             ->assertJson([
-                'data' => Reply::first()->toArray(),
+                'data' => $reply->toArray(),
             ]);
+    }
+
+    public function testRespostaEmDestaque()
+    {
+        $thread = Thread::factory()->create();
+        Reply::factory(2)->create(['thread_id' => $thread->id]);
+
+        $user = User::first();
+        $user->role = 'admin';
+        $user->save();
+
+        $response = $this
+            ->actingAs($user)
+            ->json('POST', '/api/replies/1/highlighted', []);
+        
+        $response->assertStatus(200)
+            ->assertJsonFragment(['updated' => "success"]);
+
+        $response = $this
+            ->actingAs($user)
+            ->json('POST', '/api/replies/2/highlighted', [])
+            ->assertJsonFragment(['updated' => "success"]);
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('replies', [
+            'id' => 1,
+            'highlighted' => false,
+        ]);
+
+        $this->assertDatabaseHas('replies', [
+            'id' => 2,
+            'highlighted' => true,
+        ]);
     }
 }

@@ -6,18 +6,21 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>#</th>
+                            <th style="width:1px">#</th>
                             <th>{{ thread }}</th>
                             <th>{{ reply }}</th>
-                            <th></th>
+                            <th style="width:165px"></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(thread, i) in threads_response.data" :key="i">
+                        <tr v-for="(thread, i) in threads_response.data" :class="{'lime lighen-4' : thread.fixed}" :key="i">
                             <td>{{ thread.id }}</td>
                             <td>{{ thread.title }}</td>
                             <td>{{ thread.reply_count || 0 }} </td>
-                            <td><a :href="'/threads/' + thread.id">{{ open }}</a></td>
+                            <td class='right-align'>
+                                <a class='btn' :href="'/threads/' + thread.id">{{ open }}</a>
+                                <a class='btn orange' v-show="logged.role === 'admin'" href="#" @click.prevent="actionFixed(thread.id)">{{ fixed }}</a>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
@@ -51,11 +54,13 @@
             'new_thread',
             'thread_title',
             'thread_body',
-            'send'
+            'send',
+            'fixed'
         ],
         data() {
             return {
                 threads_response: [],
+                logged: window.user || {},
                 form: {
                     title: "",
                     body: ""
@@ -83,6 +88,11 @@
                     this.getThreads();
                     this.form = {};
                 })
+            },
+            actionFixed(id) {
+                window.axios.post(`/api/threads/${id}/fixed`).then(response => {
+                    this.getThreads();
+                });
             }
         },
     }

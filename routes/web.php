@@ -44,6 +44,7 @@ Route::middleware(['auth'])
     ->group(function(){
         Route::post('/threads', [ThreadController::class, 'store']);
         Route::put('/threads/{thread}', [ThreadController::class, 'update']);
-
+        Route::post('/threads/{thread}/fixed', [ThreadController::class, 'fixed']);
         Route::post('/replies/{thread}', [ReplyController::class, 'store']);
+        Route::post('/replies/{reply}/highlighted', [ReplyController::class, 'highlighted']);
     });

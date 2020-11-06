@@ -52,11 +52,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['title', 'thread', 'reply', 'open', 'new_thread', 'thread_title', 'thread_body', 'send'],
+  props: ['title', 'thread', 'reply', 'open', 'new_thread', 'thread_title', 'thread_body', 'send', 'fixed'],
   data: function data() {
     return {
       threads_response: [],
+      logged: window.user || {},
       form: {
         title: "",
         body: ""
@@ -90,6 +94,13 @@ __webpack_require__.r(__webpack_exports__);
         _this3.getThreads();
 
         _this3.form = {};
+      });
+    },
+    actionFixed: function actionFixed(id) {
+      var _this4 = this;
+
+      window.axios.post("/api/threads/".concat(id, "/fixed")).then(function (response) {
+        _this4.getThreads();
       });
     }
   }
@@ -588,32 +599,64 @@ var render = function() {
         _c("table", [
           _c("thead", [
             _c("tr", [
-              _c("th", [_vm._v("#")]),
+              _c("th", { staticStyle: { width: "1px" } }, [_vm._v("#")]),
               _vm._v(" "),
               _c("th", [_vm._v(_vm._s(_vm.thread))]),
               _vm._v(" "),
               _c("th", [_vm._v(_vm._s(_vm.reply))]),
               _vm._v(" "),
-              _c("th")
+              _c("th", { staticStyle: { width: "165px" } })
             ])
           ]),
           _vm._v(" "),
           _c(
             "tbody",
             _vm._l(_vm.threads_response.data, function(thread, i) {
-              return _c("tr", { key: i }, [
-                _c("td", [_vm._v(_vm._s(thread.id))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(thread.title))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(thread.reply_count || 0) + " ")]),
-                _vm._v(" "),
-                _c("td", [
-                  _c("a", { attrs: { href: "/threads/" + thread.id } }, [
-                    _vm._v(_vm._s(_vm.open))
+              return _c(
+                "tr",
+                { key: i, class: { "lime lighen-4": thread.fixed } },
+                [
+                  _c("td", [_vm._v(_vm._s(thread.id))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(thread.title))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(thread.reply_count || 0) + " ")]),
+                  _vm._v(" "),
+                  _c("td", { staticClass: "right-align" }, [
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn",
+                        attrs: { href: "/threads/" + thread.id }
+                      },
+                      [_vm._v(_vm._s(_vm.open))]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.logged.role === "admin",
+                            expression: "logged.role === 'admin'"
+                          }
+                        ],
+                        staticClass: "btn orange",
+                        attrs: { href: "#" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.actionFixed(thread.id)
+                          }
+                        }
+                      },
+                      [_vm._v(_vm._s(_vm.fixed))]
+                    )
                   ])
-                ])
-              ])
+                ]
+              )
             }),
             0
           )

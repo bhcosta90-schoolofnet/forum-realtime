@@ -1,10 +1,14 @@
 <template>
     <div>
-        <div class="card" v-for="(reply, i) in replies.data" :key=i>
+        <div class="card" v-for="(reply, i) in replies.data" :class="{'lime lighen-4' : reply.highlighted}" :key=i>
             <div class="card-content"><span class="card-title">{{ reply.user.name }} {{replied}}</span></div>
             <blockquote>
                 {{ reply.body }}
             </blockquote>
+
+            <div class="card-action" v-if="logged.role === 'admin' && reply.highlighted == false">
+                <a href="#" v-on:click.prevent="actionHighlighted(reply.id)">{{ fixed }}</a>
+            </div>
         </div>
 
         <div class="card grey lighten-4">
@@ -28,7 +32,8 @@
             "send",
             "thread-id",
             "is-closed",
-            'thread-id'
+            'thread-id',
+            'fixed'
         ],
         mounted() {
             this.getReplies()
@@ -43,6 +48,7 @@
         data() {
             return {
                 replies: [],
+                logged: window.user || {},
                 form: {
                     replay_body: ""
                 }
@@ -58,6 +64,12 @@
                 window.axios.post(`/api/replies/${this.threadId}`, this.form).then(response => {
                     this.getReplies();
                     this.form = {};
+                })
+            },
+            actionHighlighted(id)
+            {
+                window.axios.post(`/api/replies/${id}/highlighted`, {}).then(response => {
+                    this.getReplies();
                 })
             }
         },

@@ -55,6 +55,8 @@ class ThreadTest extends TestCase
 
         $thread = Thread::find(1);
         $thread->user_id = (int) $thread->user_id;
+        unset($thread->reply_count);
+        unset($thread->fixed);
 
         $response->assertStatus(201)
             ->assertJsonFragment(['created' => 'success'])
@@ -75,8 +77,47 @@ class ThreadTest extends TestCase
 
         $thread->title = 'Minha primeira postagem';
         $thread->body = 'Minha primeira postagem edição';
+        $thread->user_id = (string) $thread->user_id;
+
+        $compare = Thread::find(1);
+        unset($compare->fixed);
+        unset($compare->reply_count);
 
         $response->assertStatus(302);
-        $this->assertEquals(Thread::find(1)->toArray(), $thread->toArray());
+        $this->assertEquals($compare->toArray(), $thread->toArray());
+    }
+
+    public function testThreadFixed()
+    {
+        Thread::factory(4)->create();
+
+        $user = User::first();
+        $user->role = 'admin';
+        $user->save();
+
+        $response = $this
+            ->actingAs($user)
+            ->json('POST', '/api/threads/1/fixed', []);
+        
+        
+        $response->assertStatus(200)
+            ->assertJsonFragment(['updated' => "success"]);
+
+        $response = $this
+            ->actingAs($user)
+            ->json('POST', '/api/threads/2/fixed', [])
+            ->assertJsonFragment(['updated' => "success"]);
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('threads', [
+            'id' => 1,
+            'fixed' => true,
+        ]);
+
+        $this->assertDatabaseHas('threads', [
+            'id' => 2,
+            'fixed' => true,
+        ]);
     }
 }

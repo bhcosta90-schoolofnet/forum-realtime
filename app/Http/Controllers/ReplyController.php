@@ -34,4 +34,21 @@ class ReplyController extends Controller
             'data' => $obj
         ], Response::HTTP_CREATED);
     }
+
+    public function highlighted(Reply $reply)
+    {
+        $this->authorize('update', $reply, 'admin');
+
+        Reply::where([
+            ['thread_id', $reply->thread_id],
+            ['id', "!=", $reply->id]
+        ])->update(['highlighted' => false]);
+
+        $reply->highlighted = true;
+        $reply->save();
+
+        return response()->json([
+            'updated' => 'success'
+        ]);
+    }
 }

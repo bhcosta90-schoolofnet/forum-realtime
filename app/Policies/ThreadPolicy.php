@@ -14,4 +14,8 @@ class ThreadPolicy
     {
         return (int) $user->id === (int) $thread->user_id;
     }
+
+    public function fixed(User $user, Thread $thread, string $role = "admin"){
+        return (bool) $user->role == $role;
+    }
 }

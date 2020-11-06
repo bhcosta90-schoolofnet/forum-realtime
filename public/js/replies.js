@@ -30,8 +30,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["replied", "reply", "your-answer", "send", "thread-id", "is-closed", 'thread-id'],
+  props: ["replied", "reply", "your-answer", "send", "thread-id", "is-closed", 'thread-id', 'fixed'],
   mounted: function mounted() {
     var _this = this;
 
@@ -47,6 +51,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       replies: [],
+      logged: window.user || {},
       form: {
         replay_body: ""
       }
@@ -67,6 +72,13 @@ __webpack_require__.r(__webpack_exports__);
         _this3.getReplies();
 
         _this3.form = {};
+      });
+    },
+    actionHighlighted: function actionHighlighted(id) {
+      var _this4 = this;
+
+      window.axios.post("/api/replies/".concat(id, "/highlighted"), {}).then(function (response) {
+        _this4.getReplies();
       });
     }
   }
@@ -561,17 +573,43 @@ var render = function() {
     "div",
     [
       _vm._l(_vm.replies.data, function(reply, i) {
-        return _c("div", { key: i, staticClass: "card" }, [
-          _c("div", { staticClass: "card-content" }, [
-            _c("span", { staticClass: "card-title" }, [
-              _vm._v(_vm._s(reply.user.name) + " " + _vm._s(_vm.replied))
-            ])
-          ]),
-          _vm._v(" "),
-          _c("blockquote", [
-            _vm._v("\n            " + _vm._s(reply.body) + "\n        ")
-          ])
-        ])
+        return _c(
+          "div",
+          {
+            key: i,
+            staticClass: "card",
+            class: { "lime lighen-4": reply.highlighted }
+          },
+          [
+            _c("div", { staticClass: "card-content" }, [
+              _c("span", { staticClass: "card-title" }, [
+                _vm._v(_vm._s(reply.user.name) + " " + _vm._s(_vm.replied))
+              ])
+            ]),
+            _vm._v(" "),
+            _c("blockquote", [
+              _vm._v("\n            " + _vm._s(reply.body) + "\n        ")
+            ]),
+            _vm._v(" "),
+            _vm.logged.role === "admin" && reply.highlighted == false
+              ? _c("div", { staticClass: "card-action" }, [
+                  _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          return _vm.actionHighlighted(reply.id)
+                        }
+                      }
+                    },
+                    [_vm._v(_vm._s(_vm.fixed))]
+                  )
+                ])
+              : _vm._e()
+          ]
+        )
       }),
       _vm._v(" "),
       _c("div", { staticClass: "card grey lighten-4" }, [

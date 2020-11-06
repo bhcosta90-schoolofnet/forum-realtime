@@ -17,7 +17,8 @@ class ThreadController extends Controller
      */
     public function index()
     {
-        $threads = Thread::orderBy('updated_at', 'desc')
+        $threads = Thread::orderBy('fixed', 'desc')
+            ->orderBy('updated_at', 'desc')
             ->paginate();
 
         return response()->json($threads);
@@ -71,14 +72,13 @@ class ThreadController extends Controller
         return redirect('/threads/' . $thread->id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function fixed(Thread $thread)
     {
-        //
+        $this->authorize('fixed', $thread);
+
+        $thread->fixed = true;
+        $thread->save();
+
+        return response()->json(['updated' => 'success']);
     }
 }

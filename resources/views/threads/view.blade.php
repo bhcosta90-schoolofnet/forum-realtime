@@ -20,6 +20,7 @@
             send="{{ __('Send') }}"
             thread-id="{{ $results->id  }}"
             is-closed="{{ $results->closed  }}"
+            fixed="{{ __("Fixed Reply") }}"
         >
             @include('layouts.default.preloader')
         </reply-component>
