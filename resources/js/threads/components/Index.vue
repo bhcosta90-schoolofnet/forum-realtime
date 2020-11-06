@@ -16,7 +16,7 @@
                         <tr v-for="(thread, i) in threads_response.data" :key="i">
                             <td>{{ thread.id }}</td>
                             <td>{{ thread.title }}</td>
-                            <td>0</td>
+                            <td>{{ thread.reply_count || 0 }} </td>
                             <td><a :href="'/threads/' + thread.id">{{ open }}</a></td>
                         </tr>
                     </tbody>
