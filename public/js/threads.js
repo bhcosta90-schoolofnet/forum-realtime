@@ -64,23 +64,32 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
+    var _this = this;
+
     this.getThreads();
+    Echo.channel('new.thread').listen('NewThreadEvent', function (e) {
+      console.log(e);
+
+      if (e.thread) {
+        _this.threads_response.data.splice(0, 0, e.thread);
+      }
+    });
   },
   methods: {
     getThreads: function getThreads() {
-      var _this = this;
+      var _this2 = this;
 
       window.axios.get('/api/threads').then(function (response) {
-        _this.threads_response = response.data;
+        _this2.threads_response = response.data;
       });
     },
     save: function save() {
-      var _this2 = this;
+      var _this3 = this;
 
       window.axios.post('/api/threads', this.form).then(function (response) {
-        _this2.getThreads();
+        _this3.getThreads();
 
-        _this2.form = {};
+        _this3.form = {};
       });
     }
   }

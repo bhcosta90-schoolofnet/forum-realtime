@@ -32,13 +32,76 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * allows your team to easily build robust real-time web applications.
  */
 
-// import Echo from 'laravel-echo';
+import Echo from 'laravel-echo';
 
-// window.Pusher = require('pusher-js');
+window.Pusher = require('pusher-js');
 
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: process.env.MIX_PUSHER_APP_KEY,
-//     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
-//     forceTLS: true
-// });
+window.Echo = new Echo({
+    broadcaster: 'pusher',
+    key: process.env.MIX_PUSHER_APP_KEY,
+    cluster: process.env.MIX_PUSHER_APP_CLUSTER,
+    forceTLS: true
+});
+
+import swal from 'sweetalert2'
+
+const successCallback = (response) => {
+    return response;
+}
+
+const errorCallback = (error) => {
+    switch(error.response.status){
+        case 422:
+            swal.fire({
+                title: "Erro",
+                text: "Dados enviados estão incorretos.",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'OK!',
+                cancelButtonText: 'Não!'
+            }).then(result => {
+                if(result.value) {
+                    window.location = '/login';
+                }
+            });
+            break;
+        case 401:
+            swal.fire({
+                title: "Autenticação",
+                text: "Para acessar esse recurso, você precisa estar autenticado, Você será redirecionado",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'OK!',
+                cancelButtonText: 'Não!'
+            }).then(result => {
+                if(result.value) {
+                    window.location = '/login';
+                }
+            });
+        break;
+        default:
+            swal.fire({
+                title: "Erro",
+                text: "Algo deu errado e não pude resolver.",
+                icon: 'error',
+                showCancelButton: true,
+                confirmButtonText: 'OK!',
+                cancelButtonText: 'Não!'
+            }).then(result => {
+                if(result.value) {
+                    window.location = '/login';
+                }
+            });
+    }
+
+    return Promise.reject(error)
+}
+
+window.axios.interceptors.response.use(successCallback, errorCallback);
+
+window.Vue = require('vue');
+Vue.component('loader-component', require('./common/PreLoader.vue').default);
+
+const commonApp = new Vue({
+    el: '#loader'
+});

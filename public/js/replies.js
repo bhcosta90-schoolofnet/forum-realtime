@@ -30,31 +30,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["replied", "reply", "your-answer", "send", "thread-id", "is-closed"],
+  props: ["replied", "reply", "your-answer", "send", "thread-id", "is-closed", 'thread-id'],
   mounted: function mounted() {
-    console.log('Component mounted.');
+    var _this = this;
+
+    this.getReplies();
+    Echo.channel("new.reply.".concat(this.threadId)).listen('NewReplyEvent', function (e) {
+      console.log(e);
+
+      if (e.reply) {
+        _this.getReplies();
+      }
+    });
+  },
+  data: function data() {
+    return {
+      replies: [],
+      form: {
+        replay_body: ""
+      }
+    };
+  },
+  methods: {
+    getReplies: function getReplies() {
+      var _this2 = this;
+
+      window.axios.get("/api/replies/".concat(this.threadId)).then(function (response) {
+        _this2.replies = response.data;
+      });
+    },
+    save: function save() {
+      var _this3 = this;
+
+      window.axios.post("/api/replies/".concat(this.threadId), this.form).then(function (response) {
+        _this3.getReplies();
+
+        _this3.form = {};
+      });
+    }
   }
 });
 
@@ -543,74 +557,82 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-content" }, [
-        _c("span", { staticClass: "card-title" }, [
-          _vm._v("Erik " + _vm._s(_vm.replied))
+  return _c(
+    "div",
+    [
+      _vm._l(_vm.replies.data, function(reply, i) {
+        return _c("div", { key: i, staticClass: "card" }, [
+          _c("div", { staticClass: "card-content" }, [
+            _c("span", { staticClass: "card-title" }, [
+              _vm._v(_vm._s(reply.user.name) + " " + _vm._s(_vm.replied))
+            ])
+          ]),
+          _vm._v(" "),
+          _c("blockquote", [
+            _vm._v("\n            " + _vm._s(reply.body) + "\n        ")
+          ])
         ])
-      ]),
+      }),
       _vm._v(" "),
-      _c("blockquote", [_vm._v("\n            dwaodpkaodwkdkoak\n        ")])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-content" }, [
-        _c("span", { staticClass: "card-title" }, [
-          _vm._v("Erik " + _vm._s(_vm.replied))
-        ])
-      ]),
-      _vm._v(" "),
-      _c("blockquote", [_vm._v("\n            dwaodpkaodwkdkoak\n        ")])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-content" }, [
-        _c("span", { staticClass: "card-title" }, [
-          _vm._v("Erik " + _vm._s(_vm.replied))
-        ])
-      ]),
-      _vm._v(" "),
-      _c("blockquote", [_vm._v("\n            dwaodpkaodwkdkoak\n        ")])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-content" }, [
-        _c("span", { staticClass: "card-title" }, [
-          _vm._v("Erik " + _vm._s(_vm.replied))
-        ])
-      ]),
-      _vm._v(" "),
-      _c("blockquote", [_vm._v("\n            dwaodpkaodwkdkoak\n        ")])
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "card grey lighten-4" }, [
-      _c("div", { staticClass: "card-content" }, [
-        _c("span", { staticClass: "card-title" }, [_vm._v(_vm._s(_vm.reply))]),
-        _vm._v(" "),
-        _c("form", { attrs: { action: "" } }, [
-          _c("div", { staticClass: "input-field" }, [
-            _c("textarea", {
-              staticClass: "materialize-textarea",
-              attrs: {
-                placeholder: _vm.yourAnswer,
-                name: "",
-                id: "",
-                cols: "30",
-                rows: "10"
-              }
-            })
+      _c("div", { staticClass: "card grey lighten-4" }, [
+        _c("div", { staticClass: "card-content" }, [
+          _c("span", { staticClass: "card-title" }, [
+            _vm._v(_vm._s(_vm.reply))
           ]),
           _vm._v(" "),
           _c(
-            "button",
-            { staticClass: "btn red accent-2", attrs: { type: "submit" } },
-            [_vm._v(_vm._s(_vm.send))]
+            "form",
+            {
+              on: {
+                submit: function($event) {
+                  $event.preventDefault()
+                  return _vm.save()
+                }
+              }
+            },
+            [
+              _c("div", { staticClass: "input-field" }, [
+                _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.form.reply_body,
+                      expression: "form.reply_body"
+                    }
+                  ],
+                  staticClass: "materialize-textarea",
+                  attrs: {
+                    placeholder: _vm.yourAnswer,
+                    name: "",
+                    id: "",
+                    cols: "30",
+                    rows: "10"
+                  },
+                  domProps: { value: _vm.form.reply_body },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.form, "reply_body", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c(
+                "button",
+                { staticClass: "btn red accent-2", attrs: { type: "submit" } },
+                [_vm._v(_vm._s(_vm.send))]
+              )
+            ]
           )
         ])
       ])
-    ])
-  ])
+    ],
+    2
+  )
 }
 var staticRenderFns = []
 render._withStripped = true

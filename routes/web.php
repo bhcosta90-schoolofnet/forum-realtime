@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\ThreadController;
+use App\Http\Controllers\{ReplyController, ThreadController};
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -33,10 +33,14 @@ Route::get('/locale/{locale}', function($locale){
 
 Route::get('/threads/{thread}/edit', [ThreadController::class, 'edit'])->middleware(['auth']);
 
+Route::get('/api/threads', [ThreadController::class, 'index']);
+Route::get('/api/replies/{thread}', [ReplyController::class, 'show']);
+
 Route::middleware(['auth'])
     ->prefix('api')
     ->group(function(){
-        Route::get('/threads', [ThreadController::class, 'index']);
         Route::post('/threads', [ThreadController::class, 'store']);
         Route::put('/threads/{thread}', [ThreadController::class, 'update']);
+
+        Route::post('/replies/{thread}', [ReplyController::class, 'store']);
     });

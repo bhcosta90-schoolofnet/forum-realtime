@@ -64,6 +64,13 @@
         },
         mounted() {
             this.getThreads();
+            Echo.channel('new.thread')
+                .listen('NewThreadEvent', (e) => {
+                    console.log(e)
+                    if (e.thread) {
+                        this.threads_response.data.splice(0, 0, e.thread)
+                    }
+                });
         },
         methods: {
             getThreads() {

@@ -21,9 +21,10 @@
         <footer class='page-footer'>
             @include('layouts.default.footer')
         </footer>
+
+        <div id='loader'><loader-component /></div>
         @component('layouts.default.scripts')
             @yield('scripts')
         @endcomponent
-        
     </body>
 </html>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewThreadEvent;
 use App\Http\Requests\ThreadRequest;
 use App\Models\Thread;
 use Illuminate\Http\Request;
@@ -35,6 +36,8 @@ class ThreadController extends Controller
         $obj->body = $request->input('body');
         $obj->user_id = (int) auth()->user()->id;
         $obj->save();
+
+        broadcast(new NewThreadEvent($obj));
 
         return response()->json([
             'created' => 'success',
