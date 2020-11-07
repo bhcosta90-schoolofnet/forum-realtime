@@ -53,8 +53,10 @@ class User extends Authenticatable
 
     protected function getPhotoUrlAttribute()
     {
-        if($this->photo){
+        if($this->photo && config('filesystems.default') == 'local'){
             return asset($this->photo);
         }
+
+        return $this->photo;
     }
 }
