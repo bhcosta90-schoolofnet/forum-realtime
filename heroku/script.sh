@@ -5,3 +5,5 @@ then
     composer install;
     php artisan test;
 fi
+
+php artisan migrate
