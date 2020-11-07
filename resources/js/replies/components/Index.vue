@@ -46,7 +46,6 @@
             this.getReplies()
             Echo.channel(`new.reply.${this.threadId}`)
                 .listen('NewReplyEvent', (e) => {
-                    console.log(e)
                     if (e.reply) {
                         this.getReplies();
                     }
