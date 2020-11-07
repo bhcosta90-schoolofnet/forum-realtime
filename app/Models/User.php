@@ -58,6 +58,6 @@ class User extends Authenticatable
             return asset($this->photo);
         }
 
-        return $this->photo;
+        return Storage::exists($this->photo) ? $this->photo : null;
     }
 }
