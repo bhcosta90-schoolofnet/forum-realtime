@@ -16,6 +16,7 @@ class CreateSocialAuthsTable extends Migration
         Schema::create('social_auths', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users');
+            $table->string('avatar')->nullable();
             $table->string('provider');
             $table->string('social_id');
             $table->timestamps();
