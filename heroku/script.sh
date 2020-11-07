@@ -1,6 +1,6 @@
 #/bin/bash
 
 composer install;
-vendor/bin/phpunit
+php artisan test;
 composer install --no-dev;
 php artisan migrate:fresh
