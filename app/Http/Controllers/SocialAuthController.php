@@ -37,6 +37,7 @@ class SocialAuthController extends Controller
 
         $newUser = new User;
         $newUser->name = $user->name;
+        $newUser->photo = $user->avatar;
         $newUser->email = $user->email;
         $newUser->password = md5($user->id);
         $newUser->save();
