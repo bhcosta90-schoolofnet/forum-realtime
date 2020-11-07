@@ -24,9 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        if(!app()->enviroment('production')){
-            $schedule->command('migrate:fresh --seed')->daily();
-        }
+        $schedule->command('migrate:fresh')->daily();
     }
 
     /**
