@@ -1,6 +1,6 @@
 #/bin/bash
 
-if [ "$APP_ENV" == "production" ]
+if [ "$APP_ENV" != "production" ]
 then
     composer install;
     php artisan test;
