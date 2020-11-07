@@ -6,4 +6,3 @@ then
     php artisan test;
     composer install --no-dev;
 fi
-php artisan migrate:fresh
