@@ -54,10 +54,15 @@ class User extends Authenticatable
 
     protected function getPhotoUrlAttribute()
     {
-        if ($this->photo && config('filesystems.default') == 'public' && Storage::exists($this->photo)) {
-            return asset($this->photo);
+        if(substr($this->photo, 0, 4) != 'http'){
+            if ($this->photo && config('filesystems.default') == 'public' && Storage::exists($this->photo)) {
+                return asset($this->photo);
+            }
+
+            return Storage::exists($this->photo) ? $this->photo : null;
         }
 
-        return Storage::exists($this->photo) ? $this->photo : null;
+        return $this->photo;
+        
     }
 }

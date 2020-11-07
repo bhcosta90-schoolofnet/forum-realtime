@@ -20,6 +20,8 @@ class SocialAuthController extends Controller
             ->first();
 
         if ($social) {
+            $social->user->photo = $user->avatar;
+            $social->user->save();
             auth()->login($social->user);
             return redirect()->to('/');
         }
@@ -27,6 +29,8 @@ class SocialAuthController extends Controller
         $localUser = User::where('email', $user->email)->first();
 
         if ($localUser) {
+            $localUser->photo = $user->avatar;
+            $localUser->save();
             auth()->login($localUser);
             return redirect()->to('/');
         }
@@ -38,6 +42,7 @@ class SocialAuthController extends Controller
         $newUser->save();
 
         $newSocial = new SocialAuth;
+        $newSocial->avatar = $user->avatar;
         $newSocial->social_id = $user->id;
         $newSocial->provider = $provider;
         $newSocial->user()->associate($newUser);
