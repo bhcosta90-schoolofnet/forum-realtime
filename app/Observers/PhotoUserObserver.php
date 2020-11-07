@@ -14,7 +14,6 @@ class PhotoUserObserver
         if (is_a($user->photo, UploadedFile::class) && $user->photo->isValid()) {
             $this->upload($user);
         }
-        dd($user);
     }
 
     public function deleting(User $user)
