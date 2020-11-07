@@ -24,6 +24,10 @@ Route::get('/', function () {
     return view('threads.index');
 });
 
+Route::get('/policies', function() {
+    return view('threads.index');
+});
+
 Route::get('/threads/{id}', function ($id) {
     $results = \App\Models\Thread::findOrFail($id);
     return view('threads.view', compact('results'));
