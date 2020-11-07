@@ -6,4 +6,4 @@ then
     php artisan test;
     composer install --no-dev;
 fi
-php artisan migrate:fresh
+php artisan migrate:fresh --seed
