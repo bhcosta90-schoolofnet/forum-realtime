@@ -6,4 +6,4 @@ then
     php artisan test;
 fi
 
-php artisan migrate
+php artisan migrate --force
