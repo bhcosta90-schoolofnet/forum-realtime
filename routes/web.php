@@ -24,6 +24,10 @@ Route::get('/', function () {
     return view('threads.index');
 });
 
+Route::get('/home', function () {
+    return redirect()->to('/');
+});
+
 Route::get('/policies', function() {
     return view('threads.index');
 });
