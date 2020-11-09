@@ -15,9 +15,10 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register(Request $request)
+    public function register()
     {
         Schema::defaultStringLength(191);
+        $request = app(Request::class);
 
         if (env('REDIRECT_HTTP') || $request->getHost() == 'bhcosta90-forum-realtime.herokuapp.com') {
             \URL::forceScheme('https');
