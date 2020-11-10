@@ -28,10 +28,12 @@ class Kernel extends ConsoleKernel
     {
         $schedule->command('inspire')->hourly();
         
-        $schedule->call(function () {
-            $response = Http::get('http://forum.bhcosta90.dev.br/');
-            Log::info($response->status());
-        })->everyTenMinutes();
+        if(env('RUN_REQUEST', 0) == 1){
+            $schedule->call(function () {
+                $response = Http::get('http://forum.bhcosta90.dev.br/');
+                Log::info($response->status());
+            })->everyTenMinutes();
+        }
     }
 
     /**
